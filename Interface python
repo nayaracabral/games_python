@@ -1,0 +1,94 @@
+import random
+import tkinter as tk
+
+# Funções para o jogo da forca
+def print_hangman(errors, canvas):
+    # Desenha a forca em um canvas
+    if errors == 0:
+        canvas.create_line(50, 250, 150, 250)
+        canvas.create_line(100, 250, 100, 50)
+        canvas.create_line(100, 50, 200, 50)
+        canvas.create_line(200, 50, 200, 75)
+    elif errors == 1:
+        canvas.create_oval(170, 75, 230, 135)
+    elif errors == 2:
+        canvas.create_line(200, 135, 200, 200)
+    elif errors == 3:
+        canvas.create_line(200, 150, 230, 175)
+    elif errors == 4:
+        canvas.create_line(200, 150, 170, 175)
+    elif errors == 5:
+        canvas.create_line(200, 200, 230, 225)
+    else:
+        canvas.create_line(200, 200, 170, 225)
+
+def play(canvas, words, max_errors):
+    word = random.choice(words).upper()
+    guessed_letters = set()
+    correct_letters = set(word)
+    errors = 0
+
+    # Inicializa a interface do jogo
+    output_text.set("Adivinhe a palavra:")
+    letters_text.set("")
+    print_hangman(errors, canvas)
+
+    while True:
+        # Desenha a lista de letras já tentadas
+        letters_text.set("Letras tentadas: " + ", ".join(sorted(guessed_letters)))
+
+        # Desenha as letras da palavra
+        hidden_word = ""
+        for letter in word:
+            if letter in guessed_letters:
+                hidden_word += letter + " "
+            else:
+                hidden_word += "_ "
+        output_text.set(hidden_word)
+
+        if correct_letters.issubset(guessed_letters):
+            output_text.set("Parabéns, você ganhou!")
+            break
+        elif errors >= max_errors:
+            output_text.set("Game over! A palavra era: " + word)
+            break
+
+        # Recebe uma letra do usuário
+        guess = guess_entry.get().upper()
+        guess_entry.delete(0, tk.END)
+        if guess in guessed_letters:
+            output_text.set("Você já tentou essa letra. Tente novamente.")
+        elif guess in correct_letters:
+            guessed_letters.add(guess)
+        else:
+            errors += 1
+            guessed_letters.add(guess)
+            print_hangman(errors, canvas)
+            output_text.set("Letra errada. Tente novamente.")
+
+# Interface gráfica usando Tkinter
+window = tk.Tk()
+window.title("Jogo da Forca")
+
+canvas = tk.Canvas(window, width=300, height=300)
+canvas.pack()
+
+output_text = tk.StringVar()
+output_label = tk.Label(window, textvariable=output_text)
+output_label.pack()
+
+letters_text = tk.StringVar()
+letters_label = tk.Label(window, textvariable=letters_text)
+letters_label.pack()
+
+guess_entry = tk.Entry(window, width=10)
+guess_entry.pack()
+
+play_button = tk.Button(window, text="Jogar", command=lambda: play(canvas, words, max_errors))
+play_button.pack()
+
+user_words = input("Digite as palavras que deseja adicionar ao jogo, separadas por vírgula: ")
+words = user_words.split(',')
+max_errors = 6
+
+window.mainloop()
