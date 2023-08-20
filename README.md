@@ -1,4 +1,4 @@
-# Games
+# Games_python
 ✨ Projetos de mini jogos em linguagens que estou conhecendo.
 
  ## WINDOWS
