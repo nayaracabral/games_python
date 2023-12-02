@@ -1,0 +1,31 @@
+import random
+import tkinter as tk
+from tkinter import messagebox
+
+numero_secreto = random.randint(1, 10)
+tentativas = 0
+
+def verificar_palpite():
+    palpite = int(entry.get())
+    tentativas += 1
+
+    if palpite == numero_secreto:
+        messagebox.showinfo("Resultado", f"Parabéns!!! Você acertou em {tentativas} tentativas.")
+    elif palpite < numero_secreto:
+        messagebox.showinfo("Resultado", "O número é maior. Tente novamente! music...Exagero... jogado aos teus pés, eu sou mesmo exagerado! ")
+    else:
+        messagebox.showinfo("Resultado", "O número é menor. Tente de novo!")
+
+root = tk.Tk()
+root.title("Jogo de Números Aleatórios")
+
+label = tk.Label(root, text="É  um número entre 1 e 10. Tente adivinhar")
+label.pack()
+
+entry = tk.Entry(root)
+entry.pack()
+
+button = tk.Button(root, text="Verificar", command=verificar_palpite)
+button.pack()
+
+root.mainloop()
